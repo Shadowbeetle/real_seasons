@@ -22,6 +22,6 @@ defmodule Mix.Tasks.RealSeasons.FetchData do
 
     RealSeasons.DataPipeline.full_fetch()
 
-    Mix.shell().info("Done! Stats written to priv/data/temps.json")
+    Mix.shell().info("Done!")
   end
 end

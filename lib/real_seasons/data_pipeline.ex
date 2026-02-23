@@ -12,12 +12,16 @@ defmodule RealSeasons.DataPipeline do
   @longitude 19.04
   @archive_url "https://archive-api.open-meteo.com/v1/archive"
 
-  @baselines %{
-    "since1970" => {1970, 2025},
-    "last20y" => {2006, 2025},
-    "last10y" => {2016, 2025},
-    "last5y" => {2021, 2025}
-  }
+  defp baselines do
+    year = Date.utc_today().year
+
+    %{
+      "since1970" => {1970, year},
+      "last20y" => {year - 19, year},
+      "last10y" => {year - 9, year},
+      "last5y" => {year - 4, year}
+    }
+  end
 
   @doc """
   Refresh data: fetch only the current year and recompute stats.
@@ -49,11 +53,12 @@ defmodule RealSeasons.DataPipeline do
     output_dir = Path.dirname(output_path())
     File.mkdir_p!(output_dir)
 
-    {min_year, _} = @baselines |> Map.values() |> Enum.min_by(&elem(&1, 0))
-    {_, max_year} = @baselines |> Map.values() |> Enum.max_by(&elem(&1, 1))
+    {min_year, _} = baselines() |> Map.values() |> Enum.min_by(&elem(&1, 0))
+    {_, max_year} = baselines() |> Map.values() |> Enum.max_by(&elem(&1, 1))
+    current_year = Date.utc_today().year
 
     for year <- min_year..max_year do
-      fetch_year(year, cache_dir)
+      fetch_year(year, cache_dir, force: year == current_year)
       Process.sleep(500)
     end
 
@@ -78,7 +83,7 @@ defmodule RealSeasons.DataPipeline do
                latitude: @latitude,
                longitude: @longitude,
                start_date: "#{year}-01-01",
-               end_date: "#{year}-12-31",
+               end_date: end_date_for(year),
                hourly: "apparent_temperature",
                timezone: "Europe/Budapest"
              ],
@@ -135,7 +140,7 @@ defmodule RealSeasons.DataPipeline do
   end
 
   defp compute_all_baselines(all_years) do
-    Map.new(@baselines, fn {name, {start_year, end_year}} ->
+    Map.new(baselines(), fn {name, {start_year, end_year}} ->
       Logger.info("[DataPipeline] Computing stats for #{name} (#{start_year}-#{end_year})")
       stats = compute_baseline(all_years, start_year, end_year)
       {name, stats}
@@ -178,6 +183,16 @@ defmodule RealSeasons.DataPipeline do
   defp write_output(stats) do
     json = Jason.encode!(stats, pretty: true)
     File.write!(output_path(), json)
+  end
+
+  defp end_date_for(year) do
+    today = Date.utc_today()
+
+    if year == today.year do
+      Date.to_iso8601(today)
+    else
+      "#{year}-12-31"
+    end
   end
 
   defp cache_dir do

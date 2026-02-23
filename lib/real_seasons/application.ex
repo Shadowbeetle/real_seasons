@@ -7,19 +7,16 @@ defmodule RealSeasons.Application do
 
   @impl true
   def start(_type, _args) do
+    RealSeasons.TempStats.load()
+
     children = [
       RealSeasonsWeb.Telemetry,
-      RealSeasons.Repo,
       {DNSCluster, query: Application.get_env(:real_seasons, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: RealSeasons.PubSub},
-      # Start a worker by calling: RealSeasons.Worker.start_link(arg)
-      # {RealSeasons.Worker, arg},
-      # Start to serve requests, typically the last entry
+      RealSeasons.Scheduler,
       RealSeasonsWeb.Endpoint
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: RealSeasons.Supervisor]
     Supervisor.start_link(children, opts)
   end

@@ -8,6 +8,7 @@ defmodule RealSeasonsWeb.Router do
     plug :put_root_layout, html: {RealSeasonsWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug RealSeasonsWeb.Plugs.Locale
   end
 
   pipeline :api do
@@ -18,6 +19,7 @@ defmodule RealSeasonsWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/locale/:locale", PageController, :set_locale
   end
 
   # Other scopes may use custom stacks.

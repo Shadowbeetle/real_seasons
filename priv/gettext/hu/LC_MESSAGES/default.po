@@ -1,0 +1,92 @@
+## Hungarian translations
+msgid ""
+msgstr ""
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Budapest actually has 12 seasons"
+msgstr "Budapestnek 12 ÉVSZAKA VAN"
+
+msgid "You are here"
+msgstr "Itt vagy!"
+
+msgid "Since 1970"
+msgstr "1970 óta"
+
+msgid "Last 20 years"
+msgstr "Utolsó 20 év"
+
+msgid "Last 10 years"
+msgstr "Utolsó 10 év"
+
+msgid "Last 5 years"
+msgstr "Utolsó 5 év"
+
+msgid "Winter"
+msgstr "Tél"
+
+msgid "Fool's Spring"
+msgstr "Bolondok Tavasza"
+
+msgid "Second Winter"
+msgstr "Második Tél"
+
+msgid "Deceptive Spring"
+msgstr "Csalóka Tavasz"
+
+msgid "Third Winter"
+msgstr "Harmadik Tél"
+
+msgid "The Poplar Bloom"
+msgstr "Nyárfavirágzás"
+
+msgid "Actual Spring"
+msgstr "Igazi Tavasz"
+
+msgid "Summer"
+msgstr "Nyár"
+
+msgid "Hell's Front Porch"
+msgstr "A pokol tornáca"
+
+msgid "False Fall"
+msgstr "Hamis Ősz"
+
+msgid "Indian Summer"
+msgstr "Vénasszonyok Nyara"
+
+msgid "Actual Fall"
+msgstr "Igazi Ősz"
+
+msgid "%{value} standard deviations warmer than the %{baseline} average"
+msgstr "%{value} szórásnyival melegebb a(z) %{baseline} átlagnál"
+
+msgid "%{value} standard deviations colder than the %{baseline} average"
+msgstr "%{value} szórásnyival hidegebb a(z) %{baseline} átlagnál"
+
+msgid "almost exactly the expected temperature"
+msgstr "szinte pontosan a várható hőmérséklet"
+
+msgid "The baselines disagree on the season — climate change in action."
+msgstr "Az alapvonalak nem értenek egyet az évszakban — klímaváltozás akcióban."
+
+msgid "About this page"
+msgstr "Az oldalról"
+
+msgid "Could not fetch weather data. Please try again later."
+msgstr "Nem sikerült lekérni az időjárási adatokat. Kérjük, próbáld újra később."
+
+msgid "Temperature stats not loaded. Run: mix real_seasons.fetch_data"
+msgstr "A hőmérsékleti statisztikák nincsenek betöltve. Futtasd: mix real_seasons.fetch_data"
+
+msgid "Current feels-like: %{temp}°C"
+msgstr "Jelenlegi hőérzet: %{temp}°C"
+
+msgid "This page is inspired by %{link} and classifies Budapest's current weather into one of 12 humorous seasons."
+msgstr "Ez az oldal a %{link} projektből inspirálódott, és Budapest jelenlegi időjárását sorolja be 12 humoros évszak egyikébe."
+
+msgid "The current feels-like temperature is fetched from the %{link} API, then compared against 4 different historical baselines. If the current temperature is more than 1.5 standard deviations from the mean for this time of year, the period is classified as \"cold\" or \"hot\", which determines the season."
+msgstr "Az aktuális hőérzetet a(z) %{link} API-ból kérjük le, majd összehasonlítjuk 4 különböző történelmi alapvonallal. Ha az aktuális hőmérséklet 1,5 szórásnál jobban eltér az átlagtól, az adott időszak \"hidegnek\" vagy \"forrónak\" minősül, ami meghatározza az évszakot."
+
+msgid "The 4 baselines (since 1970, last 20/10/5 years) are shown simultaneously, revealing how climate change has shifted what \"normal\" means."
+msgstr "A 4 alapvonal (1970 óta, utolsó 20/10/5 év) egyszerre jelenik meg, megmutatva, hogyan változtatta meg a klímaváltozás a \"normális\" fogalmát."

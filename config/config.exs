@@ -7,9 +7,7 @@
 # General application configuration
 import Config
 
-config :real_seasons,
-  ecto_repos: [RealSeasons.Repo],
-  generators: [timestamp_type: :utc_datetime]
+config :real_seasons, []
 
 # Configure the endpoint
 config :real_seasons, RealSeasonsWeb.Endpoint,
@@ -51,6 +49,33 @@ config :tailwind,
     ),
     cd: Path.expand("..", __DIR__)
   ]
+
+# Configure PythonX
+config :pythonx, :uv_init,
+  pyproject_toml: """
+  [project]
+  name = "real_seasons"
+  version = "0.0.0"
+  requires-python = "==3.13.*"
+  dependencies = [
+    "numpy",
+    "requests"
+  ]
+  """
+
+# Configure Quantum scheduler
+config :real_seasons, RealSeasons.Scheduler,
+  jobs: [
+    # Run data refresh on the 1st of each month at 3:00 AM
+    {"0 3 1 * *", {RealSeasons.DataPipeline, :refresh, []}}
+  ]
+
+# Configure Gettext
+config :gettext, :default_locale, "hu"
+config :real_seasons, RealSeasonsWeb.Gettext, default_locale: "hu", locales: ~w(hu en)
+
+# Configure timezone database for DateTime.shift_zone!/2
+config :elixir, :time_zone_database, Tz.TimeZoneDatabase
 
 # Configure Elixir's Logger
 config :logger, :default_formatter,

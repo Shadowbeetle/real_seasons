@@ -7,7 +7,21 @@
       "WebFetch(domain:archive-api.open-meteo.com)",
       "WebFetch(domain:api.open-meteo.com)",
       "Bash(curl:*)",
-      "WebFetch(domain:hexdocs.pm)"
+      "WebFetch(domain:hexdocs.pm)",
+      "Bash(mix deps.get:*)",
+      "Bash(elixir:*)",
+      "Bash(asdf current:*)",
+      "Bash(asdf list:*)",
+      "Bash(/home/nazgul/.asdf/installs/erlang/27.0/lib/erlang/bin/erl:*)",
+      "Bash(/home/nazgul/.asdf/installs/erlang/27.0/bin/erl:*)",
+      "Bash(asdf reshim:*)",
+      "Bash(/home/nazgul/.asdf/installs/elixir/1.19.5-otp-27/bin/elixir:*)",
+      "Bash(ASDF_ELIXIR_VERSION=1.17.3-otp-27 elixir:*)",
+      "Bash(python3:*)",
+      "Bash(mix precommit:*)",
+      "Bash(echo:*)",
+      "Bash(erl -eval:*)",
+      "Bash(/home/nazgul/.asdf/shims/elixir:*)"
     ]
   }
 }

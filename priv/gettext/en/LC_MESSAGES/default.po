@@ -1,0 +1,92 @@
+## English translations (source language, so msgstr can be empty or same as msgid)
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Budapest actually has 12 seasons"
+msgstr "Budapest actually has 12 SEASONS"
+
+msgid "You are here"
+msgstr ""
+
+msgid "Since 1970"
+msgstr ""
+
+msgid "Last 20 years"
+msgstr ""
+
+msgid "Last 10 years"
+msgstr ""
+
+msgid "Last 5 years"
+msgstr ""
+
+msgid "Winter"
+msgstr ""
+
+msgid "Fool's Spring"
+msgstr ""
+
+msgid "Second Winter"
+msgstr ""
+
+msgid "Deceptive Spring"
+msgstr ""
+
+msgid "Third Winter"
+msgstr ""
+
+msgid "The Poplar Bloom"
+msgstr ""
+
+msgid "Actual Spring"
+msgstr ""
+
+msgid "Summer"
+msgstr ""
+
+msgid "Hell's Front Porch"
+msgstr ""
+
+msgid "False Fall"
+msgstr ""
+
+msgid "Indian Summer"
+msgstr ""
+
+msgid "Actual Fall"
+msgstr ""
+
+msgid "%{value} standard deviations warmer than the %{baseline} average"
+msgstr ""
+
+msgid "%{value} standard deviations colder than the %{baseline} average"
+msgstr ""
+
+msgid "almost exactly the expected temperature"
+msgstr ""
+
+msgid "The baselines disagree on the season — climate change in action."
+msgstr ""
+
+msgid "About this page"
+msgstr ""
+
+msgid "Could not fetch weather data. Please try again later."
+msgstr ""
+
+msgid "Temperature stats not loaded. Run: mix real_seasons.fetch_data"
+msgstr ""
+
+msgid "Current feels-like: %{temp}°C"
+msgstr ""
+
+msgid "This page is inspired by %{link} and classifies Budapest's current weather into one of 12 humorous seasons."
+msgstr ""
+
+msgid "The current feels-like temperature is fetched from the %{link} API, then compared against 4 different historical baselines. If the current temperature is more than 1.5 standard deviations from the mean for this time of year, the period is classified as \"cold\" or \"hot\", which determines the season."
+msgstr ""
+
+msgid "The 4 baselines (since 1970, last 20/10/5 years) are shown simultaneously, revealing how climate change has shifted what \"normal\" means."
+msgstr ""

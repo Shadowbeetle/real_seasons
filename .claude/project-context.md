@@ -105,12 +105,15 @@ For a given baseline's mean and std at the current day-hour:
 
 ## Tech Stack
 
-- **Backend:** Elixir / Phoenix (no LiveView — static HTML/CSS frontend)
+- **Backend:** Elixir / Phoenix 1.8 (controller-based, no LiveView)
+- **Styling:** Tailwind CSS v4 (project default — no Pico CSS, no `tailwind.config.js`)
+- **Icons:** Heroicons via `<.icon name="hero-...">` component
 - **Data pipeline:** Mix task using PythonX + numpy for historical data fetching & stats computation
-- **i18n:** Gettext (HU default, EN supported)
+- **i18n:** Gettext (HU default, EN supported) — already in deps
+- **HTTP client:** Req (already in deps) — no httpoison/tesla/httpc
 - **Historical data:** Open-Meteo Archive API (free, no key needed)
 - **Current weather:** Open-Meteo Forecast API (free, no key needed)
-- **Frontend:** Static HTML/CSS reusing the original 12seasons.nyc patterns, served by Phoenix
+- **Frontend:** Server-rendered HEEx templates; all classification logic runs server-side. No inline `<script>` tags — any JS goes through `assets/js/app.js` via esbuild
 
 ## Data Source
 
@@ -123,11 +126,12 @@ For a given baseline's mean and std at the current day-hour:
 ## Architecture
 
 1. **Mix task** (`mix real_seasons.fetch_data`): Fetches 56 years of hourly data year-by-year, caches raw responses, uses numpy via PythonX to compute mean/std for all 4 baselines, outputs `priv/data/temps.json`
-2. **GenServer** (`RealSeasons.TempStats`): Loads pre-computed stats into memory at app startup
-3. **Weather module** (`RealSeasons.Weather`): Fetches & caches current Budapest weather from Open-Meteo
+2. **TempStats module** (`RealSeasons.TempStats`): Loads `priv/data/temps.json` into `Application.put_env` at app startup. Simple `get/2` function reads from app env. No process needed
+3. **Weather module** (`RealSeasons.Weather`): Fetches & caches (5 min) current Budapest weather from Open-Meteo using Req
 4. **Classifier** (`RealSeasons.SeasonClassifier`): Pure functions — sub-season detection, temp classification, season grid lookup
-5. **Controller/View**: Serves the static HTML page with season data injected server-side
-6. **Gettext**: HU/EN translations for all UI strings
+5. **PageController + HEEx**: `PageController.home/2` fetches weather, runs classification, renders server-side. Template uses Tailwind + Heroicons
+6. **Gettext**: HU/EN translations, locale set via session cookie with a toggle route
+7. **Quantum scheduler** (`RealSeasons.Scheduler`): Runs monthly to re-fetch the current year's data, recompute stats, and reload into app env
 
 ## UI Behavior
 

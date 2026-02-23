@@ -69,7 +69,7 @@ defmodule RealSeasons.DataPipeline do
     Logger.info("[DataPipeline] Wrote #{output_path()}")
   end
 
-  defp fetch_year(year, cache_dir, opts \\ []) do
+  defp fetch_year(year, cache_dir, opts) do
     cache_file = Path.join(cache_dir, "#{year}.json")
     force = Keyword.get(opts, :force, false)
 

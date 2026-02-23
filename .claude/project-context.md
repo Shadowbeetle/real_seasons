@@ -38,10 +38,10 @@ All shown simultaneously, each with a colored dot indicator:
 
 | Baseline | Label (HU) | Label (EN) | Color | Date Range |
 |----------|-----------|------------|-------|------------|
-| since1970 | 1970 óta | Since 1970 | #e74c3c (red) | 1970–2025 |
-| last20y | Utolsó 20 év | Last 20 years | #f39c12 (orange) | 2006–2025 |
-| last10y | Utolsó 10 év | Last 10 years | #3498db (blue) | 2016–2025 |
-| last5y | Utolsó 5 év | Last 5 years | #2ecc71 (green) | 2021–2025 |
+| since1970 | 1970 óta | Since 1970 | #e74c3c (red) | 1970–current year |
+| last20y | Utolsó 20 év | Last 20 years | #f39c12 (orange) | last 20 years |
+| last10y | Utolsó 10 év | Last 10 years | #3498db (blue) | last 10 years |
+| last5y | Utolsó 5 év | Last 5 years | #2ecc71 (green) | last 5 years |
 
 ## Classification Algorithm
 
@@ -108,8 +108,8 @@ For a given baseline's mean and std at the current day-hour:
 - **Backend:** Elixir / Phoenix 1.8 (controller-based, no LiveView)
 - **Styling:** Tailwind CSS v4 (project default — no Pico CSS, no `tailwind.config.js`)
 - **Icons:** Heroicons via `<.icon name="hero-...">` component
-- **Data pipeline:** Mix task using PythonX + numpy for historical data fetching & stats computation
-- **i18n:** Gettext (HU default, EN supported) — already in deps
+- **Data pipeline:** Mix task using pure Elixir for historical data fetching & stats computation
+- **i18n:** Gettext (locale auto-detected from browser Accept-Language header, HU fallback, EN supported) — already in deps
 - **HTTP client:** Req (already in deps) — no httpoison/tesla/httpc
 - **Historical data:** Open-Meteo Archive API (free, no key needed)
 - **Current weather:** Open-Meteo Forecast API (free, no key needed)
@@ -125,13 +125,13 @@ For a given baseline's mean and std at the current day-hour:
 
 ## Architecture
 
-1. **Mix task** (`mix real_seasons.fetch_data`): Fetches 56 years of hourly data year-by-year, caches raw responses, uses numpy via PythonX to compute mean/std for all 4 baselines, outputs `priv/data/temps.json`
+1. **Mix task** (`mix real_seasons.fetch_data`): Fetches hourly data year-by-year (1970–current year), caches raw responses, computes mean/std in pure Elixir for all 4 baselines (dynamic date ranges), outputs `priv/data/temps.json`. Always re-fetches the current year
 2. **TempStats module** (`RealSeasons.TempStats`): Loads `priv/data/temps.json` into `Application.put_env` at app startup. Simple `get/2` function reads from app env. No process needed
 3. **Weather module** (`RealSeasons.Weather`): Fetches & caches (5 min) current Budapest weather from Open-Meteo using Req
 4. **Classifier** (`RealSeasons.SeasonClassifier`): Pure functions — sub-season detection, temp classification, season grid lookup
 5. **PageController + HEEx**: `PageController.home/2` fetches weather, runs classification, renders server-side. Template uses Tailwind + Heroicons
-6. **Gettext**: HU/EN translations, locale set via session cookie with a toggle route
-7. **Quantum scheduler** (`RealSeasons.Scheduler`): Runs monthly to re-fetch the current year's data, recompute stats, and reload into app env
+6. **Gettext**: HU/EN translations, locale auto-detected from browser `Accept-Language` header (fallback: HU), persisted in session cookie, switchable via toggle route
+7. **Quantum scheduler** (`RealSeasons.Scheduler`): Runs monthly to force re-fetch the current year's data, recompute stats, and reload into app env
 
 ## UI Behavior
 

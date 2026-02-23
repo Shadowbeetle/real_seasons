@@ -64,7 +64,6 @@ defmodule RealSeasons.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:tz, "~> 0.28"},
-      {:pythonx, "~> 0.4.0"},
       {:quantum, "~> 3.5"}
     ]
   end

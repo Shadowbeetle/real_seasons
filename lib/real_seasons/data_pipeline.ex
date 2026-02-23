@@ -29,7 +29,7 @@ defmodule RealSeasons.DataPipeline do
     cache_dir = cache_dir()
     File.mkdir_p!(cache_dir)
 
-    fetch_year(current_year, cache_dir)
+    fetch_year(current_year, cache_dir, force: true)
 
     all_years = load_all_cached(cache_dir)
     stats = compute_all_baselines(all_years)
@@ -64,10 +64,11 @@ defmodule RealSeasons.DataPipeline do
     Logger.info("[DataPipeline] Wrote #{output_path()}")
   end
 
-  defp fetch_year(year, cache_dir) do
+  defp fetch_year(year, cache_dir, opts \\ []) do
     cache_file = Path.join(cache_dir, "#{year}.json")
+    force = Keyword.get(opts, :force, false)
 
-    if File.exists?(cache_file) do
+    if File.exists?(cache_file) and not force do
       Logger.info("[DataPipeline] Using cached data for #{year}")
     else
       Logger.info("[DataPipeline] Fetching data for #{year}...")
@@ -152,35 +153,25 @@ defmodule RealSeasons.DataPipeline do
           Map.update(acc, key, temps, &(&1 ++ temps))
       end
 
-    # Use PythonX + numpy for mean/std computation
-    compute_stats_with_numpy(aggregated)
+    compute_stats(aggregated)
   end
 
-  defp compute_stats_with_numpy(aggregated) do
-    keys = Map.keys(aggregated)
-    values = Enum.map(keys, &Map.fetch!(aggregated, &1))
+  defp compute_stats(aggregated) do
+    Map.new(aggregated, fn {key, temps} ->
+      valid = Enum.reject(temps, &is_nil/1)
 
-    {result, _globals} =
-      Pythonx.eval(
-        """
-        import numpy as np
+      if valid == [] do
+        {key, %{"mean" => 0.0, "std" => 1.0}}
+      else
+        n = length(valid)
+        sum = Enum.sum(valid)
+        mean = sum / n
 
-        stats = {}
-        for key, temps in zip(keys, values):
-            arr = np.array(temps, dtype=np.float64)
-            arr = arr[~np.isnan(arr)]
-            if len(arr) > 0:
-                stats[key] = {"mean": round(float(np.mean(arr)), 2), "std": round(float(np.std(arr)), 2)}
-            else:
-                stats[key] = {"mean": 0.0, "std": 1.0}
-        stats
-        """,
-        %{"keys" => keys, "values" => values}
-      )
+        variance = Enum.reduce(valid, 0.0, fn x, acc -> acc + (x - mean) * (x - mean) end) / n
+        std = :math.sqrt(variance)
 
-    Pythonx.decode(result)
-    |> Map.new(fn {key, %{"mean" => mean, "std" => std}} ->
-      {key, %{"mean" => mean, "std" => std}}
+        {key, %{"mean" => Float.round(mean, 2), "std" => Float.round(std, 2)}}
+      end
     end)
   end
 

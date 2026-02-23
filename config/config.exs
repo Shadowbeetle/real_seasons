@@ -50,19 +50,6 @@ config :tailwind,
     cd: Path.expand("..", __DIR__)
   ]
 
-# Configure PythonX
-config :pythonx, :uv_init,
-  pyproject_toml: """
-  [project]
-  name = "real_seasons"
-  version = "0.0.0"
-  requires-python = "==3.13.*"
-  dependencies = [
-    "numpy",
-    "requests"
-  ]
-  """
-
 # Configure Quantum scheduler
 config :real_seasons, RealSeasons.Scheduler,
   jobs: [

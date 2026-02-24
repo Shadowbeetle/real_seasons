@@ -21,7 +21,11 @@
       "Bash(mix precommit:*)",
       "Bash(echo:*)",
       "Bash(erl -eval:*)",
-      "Bash(/home/nazgul/.asdf/shims/elixir:*)"
+      "Bash(/home/nazgul/.asdf/shims/elixir:*)",
+      "Bash(export PATH=\"/home/nazgul/.asdf/installs/erlang/27.0/bin:/home/nazgul/.asdf/installs/elixir/1.19.5-otp-27/bin:$PATH\")",
+      "Bash(mix gettext.extract:*)",
+      "Bash(mix gettext.merge:*)",
+      "Bash(mix compile:*)"
     ]
   }
 }

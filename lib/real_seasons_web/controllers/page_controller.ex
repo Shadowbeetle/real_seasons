@@ -41,6 +41,13 @@ defmodule RealSeasonsWeb.PageController do
     last5y: "Last 5 years"
   }
 
+  @baseline_comparisons %{
+    since1970: "the since-1970 average",
+    last20y: "the last 20 years' average",
+    last10y: "the last 10 years' average",
+    last5y: "the last 5 years' average"
+  }
+
   @baseline_colors %{
     since1970: "bg-red-500",
     last20y: "bg-orange-400",
@@ -52,6 +59,7 @@ defmodule RealSeasonsWeb.PageController do
     # Pre-translate dynamic strings (avoids gettext macro warnings for non-literal args)
     translated_season_names = translate_map(@season_names)
     translated_baseline_labels = translate_map(@baseline_labels)
+    translated_baseline_comparisons = translate_map(@baseline_comparisons)
 
     common_assigns = [
       seasons_ordered: SeasonClassifier.seasons_ordered(),
@@ -59,6 +67,7 @@ defmodule RealSeasonsWeb.PageController do
       season_names: translated_season_names,
       season_icons: @season_icons,
       baseline_labels: translated_baseline_labels,
+      baseline_comparisons: translated_baseline_comparisons,
       baseline_colors: @baseline_colors,
       data_loaded: RealSeasons.TempStats.loaded?()
     ]

@@ -7,24 +7,34 @@
 
     <%!-- Explainer --%>
     <%= if @weather && @primary do %>
-      <p class="text-center text-base-content/70 mb-6">
-        <% abs_dev = abs(@primary.deviations) %>
-        <% direction = if @primary.deviations > 0, do: "warmer", else: "colder" %>
-        <%= cond do %>
-          <% abs_dev < 0.05 -> %>
-            {gettext("almost exactly the expected temperature")}
-          <% direction == "warmer" -> %>
-            {gettext("%{value} standard deviations warmer than the %{baseline} average",
-              value: :erlang.float_to_binary(abs_dev, decimals: 2),
-              baseline: @baseline_labels[:since1970]
-            )}
-          <% true -> %>
-            {gettext("%{value} standard deviations colder than the %{baseline} average",
-              value: :erlang.float_to_binary(abs_dev, decimals: 2),
-              baseline: @baseline_labels[:since1970]
-            )}
+      <div class="flex flex-col items-center gap-1 text-sm text-base-content/70 mb-6">
+        <%= for baseline <- @baselines do %>
+          <% classification = @classifications[baseline] %>
+          <% abs_dev = abs(classification.deviations) %>
+          <% dev_value = if @locale == "hu",
+            do: hungarian_multiplier(abs_dev),
+            else: :erlang.float_to_binary(abs_dev, decimals: 2) %>
+          <p class="flex items-center gap-1.5">
+            <span class={["inline-block w-2 h-2 rounded-full shrink-0", @baseline_colors[baseline]]} />
+            <%= cond do %>
+              <% abs_dev < 0.05 -> %>
+                {gettext("almost exactly %{comparison}",
+                  comparison: @baseline_comparisons[baseline]
+                )}
+              <% classification.deviations > 0 -> %>
+                {gettext("%{value} standard deviations warmer than %{comparison}",
+                  value: dev_value,
+                  comparison: @baseline_comparisons[baseline]
+                )}
+              <% true -> %>
+                {gettext("%{value} standard deviations colder than %{comparison}",
+                  value: dev_value,
+                  comparison: @baseline_comparisons[baseline]
+                )}
+            <% end %>
+          </p>
         <% end %>
-      </p>
+      </div>
 
       <% unique_seasons = @classifications |> Map.values() |> Enum.map(& &1.season) |> Enum.uniq() %>
       <%= if length(unique_seasons) > 1 do %>
@@ -114,29 +124,498 @@
     <% end %>
 
     <%!-- About section --%>
-    <details class="mt-8 text-sm text-base-content/70">
-      <summary class="cursor-pointer font-medium text-base-content/80 hover:text-base-content">
+    <details class="mt-12 text-sm text-base-content/70" id="about">
+      <summary class="cursor-pointer font-medium text-base-content/80 hover:text-base-content inline-flex items-center gap-1.5">
+        <.icon name="hero-book-open-mini" class="size-4" />
         {gettext("About this page")}
       </summary>
-      <div class="mt-4 space-y-3">
+
+      <div class="mt-6 space-y-4 leading-relaxed">
         <p>
           {gettext(
-            "This page is inspired by %{link} and classifies Budapest's current weather into one of 12 humorous seasons.",
-            link: ~s(<a href="https://12seasons.nyc" class="underline">12seasons.nyc</a>)
+            "This page is inspired by %{meme_link} and its implementation at %{site_link}.",
+            meme_link:
+              ~s(<a href="https://i.imgur.com/qT4WqjG.jpg" class="underline hover:text-base-content" target="_blank" rel="noopener">a popular meme about NYC's 12 seasons</a>),
+            site_link:
+              ~s(<a href="https://12seasons.nyc" class="underline hover:text-base-content" target="_blank" rel="noopener">12seasons.nyc</a>)
           )
           |> raw()}
         </p>
+
+        <%!-- How this Works --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("How this works")}
+        </h3>
+
         <p>
           {gettext(
-            "The current feels-like temperature is fetched from the %{link} API, then compared against 4 different historical baselines. If the current temperature is more than 1.5 standard deviations from the mean for this time of year, the period is classified as \"cold\" or \"hot\", which determines the season.",
-            link: ~s(<a href="https://open-meteo.com/" class="underline">Open-Meteo</a>)
+            "The goal of this page is to capture not the <em>astrological</em> or <em>meteorological</em> seasons of Budapest, but the <em>experiential</em> seasons — the weather as felt by someone who walks, cycles, and waits for trams without the comfort of a car."
           )
           |> raw()}
         </p>
+
         <p>
           {gettext(
-            "The 4 baselines (since 1970, last 20/10/5 years) are shown simultaneously, revealing how climate change has shifted what \"normal\" means."
+            "For instance, if it's unseasonably warm in late winter, you might leave your heavy coat at home, only to be corrected that evening by the wind off the Danube."
           )}
+        </p>
+
+        <p>
+          {gettext("This is a classic case of <strong>Fool's Spring</strong>.") |> raw()}
+        </p>
+
+        <p>
+          {gettext(
+            "This page <strong>dynamically updates</strong> based on the <strong>day of the year</strong>, the <strong>time of day</strong>, and the <strong>current feels-like temperature</strong> in Budapest."
+          )
+          |> raw()}
+        </p>
+
+        <p>
+          {gettext(
+            "It uses live weather data and over 50 years of historical data from the %{link} Archive API.",
+            link:
+              ~s(<a href="https://open-meteo.com/" class="underline hover:text-base-content" target="_blank" rel="noopener">Open-Meteo</a>)
+          )
+          |> raw()}
+        </p>
+
+        <%!-- Methodology --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("Methodology")}
+        </h3>
+
+        <p>
+          {gettext(
+            "The seasons are mapped to a two-dimensional grid using the astrological sub-season and the relative temperature for that time of year."
+          )}
+        </p>
+
+        <p class="italic">
+          {gettext("This is more art than science.")}
+        </p>
+
+        <%!-- Season grid: Winter --%>
+        <h4 class="font-medium text-base-content pt-2">{@season_names[:winter]}</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border border-base-content/10">
+            <thead>
+              <tr class="bg-base-200/50">
+                <td class="px-2 py-1 border border-base-content/10"></td>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Early")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Mid")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Late")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Cold")}
+                </th>
+                <td
+                  class="px-2 py-1 border border-base-content/10 text-center"
+                  colspan="2"
+                  rowspan="2"
+                >
+                  {@season_names[:winter]}
+                </td>
+                <td class="px-2 py-1 border border-base-content/10 text-center" rowspan="2">
+                  {@season_names[:second_winter]}
+                </td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Normal")}
+                </th>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Hot")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="3">
+                  {@season_names[:fools_spring]}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <%!-- Season grid: Spring --%>
+        <h4 class="font-medium text-base-content pt-2">{gettext("Spring")}</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border border-base-content/10">
+            <thead>
+              <tr class="bg-base-200/50">
+                <td class="px-2 py-1 border border-base-content/10"></td>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Early")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Mid")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Late")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Cold")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="3">
+                  {@season_names[:third_winter]}
+                </td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Normal")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" rowspan="2">
+                  {@season_names[:deceptive_spring]}
+                </td>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="2">
+                  {@season_names[:actual_spring]}
+                </td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Hot")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="2">
+                  {@season_names[:poplar_bloom]}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <%!-- Season grid: Summer --%>
+        <h4 class="font-medium text-base-content pt-2">{@season_names[:summer]}</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border border-base-content/10">
+            <thead>
+              <tr class="bg-base-200/50">
+                <td class="px-2 py-1 border border-base-content/10"></td>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Early")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Mid")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Late")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Cold")}
+                </th>
+                <td
+                  class="px-2 py-1 border border-base-content/10 text-center"
+                  colspan="2"
+                  rowspan="2"
+                >
+                  {@season_names[:summer]}
+                </td>
+                <td class="px-2 py-1 border border-base-content/10 text-center" rowspan="2">
+                  {@season_names[:false_fall]}
+                </td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Normal")}
+                </th>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Hot")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="3">
+                  {@season_names[:hells_porch]}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <%!-- Season grid: Fall --%>
+        <h4 class="font-medium text-base-content pt-2">{gettext("Fall")}</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border border-base-content/10">
+            <thead>
+              <tr class="bg-base-200/50">
+                <td class="px-2 py-1 border border-base-content/10"></td>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Early")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Mid")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Late")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Cold")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="3">
+                  {@season_names[:winter]}
+                </td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Normal")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="3">
+                  {@season_names[:actual_fall]}
+                </td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30">
+                  {gettext("Hot")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center" colspan="3">
+                  {@season_names[:indian_summer]}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <%!-- Sub-Seasons --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("Sub-Seasons")}
+        </h3>
+
+        <p>
+          {gettext(
+            "Each traditional season is divided into three roughly equal segments (early, mid, late) using their astrological definitions."
+          )}
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border border-base-content/10">
+            <thead>
+              <tr class="bg-base-200/50">
+                <th
+                  class="px-2 py-1 border border-base-content/10 text-left font-medium"
+                  colspan="2"
+                >
+                  {gettext("Period")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("Start")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-center font-medium">
+                  {gettext("End")}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th
+                  class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30"
+                  rowspan="3"
+                >
+                  {@season_names[:winter]}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Early")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Dec 21</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Jan 20</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Mid")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Jan 20</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Feb 19</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Late")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Feb 19</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Mar 20</td>
+              </tr>
+              <tr>
+                <th
+                  class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30"
+                  rowspan="3"
+                >
+                  {gettext("Spring")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Early")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Mar 20</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Apr 19</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Mid")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Apr 19</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">May 22</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Late")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">May 22</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Jun 21</td>
+              </tr>
+              <tr>
+                <th
+                  class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30"
+                  rowspan="3"
+                >
+                  {@season_names[:summer]}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Early")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Jun 21</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Jul 21</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Mid")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Jul 21</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Aug 22</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Late")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Aug 22</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Sep 22</td>
+              </tr>
+              <tr>
+                <th
+                  class="px-2 py-1 border border-base-content/10 text-left font-medium bg-base-200/30"
+                  rowspan="3"
+                >
+                  {gettext("Fall")}
+                </th>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Early")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Sep 22</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Oct 22</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Mid")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Oct 22</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Nov 21</td>
+              </tr>
+              <tr>
+                <th class="px-2 py-1 border border-base-content/10 text-left">
+                  {gettext("Late")}
+                </th>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Nov 21</td>
+                <td class="px-2 py-1 border border-base-content/10 text-center">Dec 21</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="text-xs italic">
+          {gettext("Ranges are inclusive start, exclusive end.")}
+        </p>
+
+        <%!-- Historical Temperature --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("Historical Temperature")}
+        </h3>
+
+        <p>
+          {gettext(
+            "A weather baseline was established by analyzing hourly apparent temperature data for Budapest from 1970 to the present, collected from the %{link} Archive API. For each day-hour combination (e.g. March 15 at 2 PM), the mean and standard deviation were calculated across all years in the range.",
+            link:
+              ~s(<a href="https://open-meteo.com/" class="underline hover:text-base-content" target="_blank" rel="noopener">Open-Meteo</a>)
+          )
+          |> raw()}
+        </p>
+
+        <p>
+          {gettext(
+            "A <strong>hot</strong> period is when the feels-like temperature exceeds the historical mean by more than 1.5 standard deviations. A <strong>cold</strong> period is when it falls more than 1.5 standard deviations below."
+          )
+          |> raw()}
+        </p>
+
+        <%!-- The 4 Baselines --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("The 4 Baselines")}
+        </h3>
+
+        <p>
+          {gettext(
+            "Unlike the original NYC page which uses a single historical baseline, this site compares the current temperature against 4 different baselines simultaneously. Each baseline uses a different date range to calculate what \"normal\" means."
+          )}
+        </p>
+
+        <p>
+          {gettext(
+            "When the baselines disagree on the current season, it reveals how climate change has shifted what counts as normal weather in Budapest. A temperature that was \"hot\" by 1970s standards might be perfectly \"normal\" by the last 5 years."
+          )}
+        </p>
+
+        <%!-- Deciding the Season --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("Deciding the Season")}
+        </h3>
+
+        <p>
+          {gettext(
+            "Using the sub-season and the temperature classification, the current season is determined from the grid above. For instance, if it's late winter and the temperature is well above average, it's classified as \"Fool's Spring.\""
+          )}
+        </p>
+
+        <%!-- Credits --%>
+        <h3 class="text-base font-semibold text-base-content pt-4">
+          {gettext("Credits")}
+        </h3>
+
+        <p>
+          {gettext(
+            "Original concept: %{meme_link}. NYC implementation by %{author_link} at %{site_link}. Weather data: %{weather_link}.",
+            meme_link:
+              ~s(<a href="https://i.imgur.com/qT4WqjG.jpg" class="underline hover:text-base-content" target="_blank" rel="noopener">the meme</a>),
+            author_link:
+              ~s(<a href="https://peticol.as" class="underline hover:text-base-content" target="_blank" rel="noopener">Devon Peticolas</a>),
+            site_link:
+              ~s(<a href="https://12seasons.nyc" class="underline hover:text-base-content" target="_blank" rel="noopener">12seasons.nyc</a>),
+            weather_link:
+              ~s(<a href="https://open-meteo.com/" class="underline hover:text-base-content" target="_blank" rel="noopener">Open-Meteo</a>)
+          )
+          |> raw()}
+        </p>
+
+        <p>
+          {gettext(
+            "Most of the content on this page is adapted from the original %{site_link} site.",
+            site_link:
+              ~s(<a href="https://12seasons.nyc" class="underline hover:text-base-content" target="_blank" rel="noopener">12seasons.nyc</a>)
+          )
+          |> raw()}
         </p>
       </div>
     </details>

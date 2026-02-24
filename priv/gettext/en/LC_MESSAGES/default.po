@@ -4,9 +4,13 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:5
+#, elixir-autogen
 msgid "Budapest actually has 12 seasons"
 msgstr "Budapest actually has 12 SEASONS"
 
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:112
+#, elixir-autogen
 msgid "You are here"
 msgstr ""
 
@@ -20,6 +24,18 @@ msgid "Last 10 years"
 msgstr ""
 
 msgid "Last 5 years"
+msgstr ""
+
+msgid "the since-1970 average"
+msgstr ""
+
+msgid "the last 20 years' average"
+msgstr ""
+
+msgid "the last 10 years' average"
+msgstr ""
+
+msgid "the last 5 years' average"
 msgstr ""
 
 msgid "Winter"
@@ -58,35 +74,275 @@ msgstr ""
 msgid "Actual Fall"
 msgstr ""
 
-msgid "%{value} standard deviations warmer than the %{baseline} average"
-msgstr ""
-
-msgid "%{value} standard deviations colder than the %{baseline} average"
-msgstr ""
-
-msgid "almost exactly the expected temperature"
-msgstr ""
-
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:42
+#, elixir-autogen
 msgid "The baselines disagree on the season — climate change in action."
 msgstr ""
 
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:130
+#, elixir-autogen
 msgid "About this page"
 msgstr ""
 
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:48
+#, elixir-autogen
 msgid "Could not fetch weather data. Please try again later."
 msgstr ""
 
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:53
+#, elixir-autogen
 msgid "Temperature stats not loaded. Run: mix real_seasons.fetch_data"
 msgstr ""
 
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:122
+#, elixir-autogen
 msgid "Current feels-like: %{temp}°C"
 msgstr ""
 
-msgid "This page is inspired by %{link} and classifies Budapest's current weather into one of 12 humorous seasons."
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:135
+#, elixir-autogen
+msgid "This page is inspired by %{meme_link} and its implementation at %{site_link}."
 msgstr ""
 
-msgid "The current feels-like temperature is fetched from the %{link} API, then compared against 4 different historical baselines. If the current temperature is more than 1.5 standard deviations from the mean for this time of year, the period is classified as \"cold\" or \"hot\", which determines the season."
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:147
+#, elixir-autogen
+msgid "How this works"
 msgstr ""
 
-msgid "The 4 baselines (since 1970, last 20/10/5 years) are shown simultaneously, revealing how climate change has shifted what \"normal\" means."
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:151
+#, elixir-autogen
+msgid "The goal of this page is to capture not the <em>astrological</em> or <em>meteorological</em> seasons of Budapest, but the <em>experiential</em> seasons — the weather as felt by someone who walks, cycles, and waits for trams without the comfort of a car."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:158
+#, elixir-autogen
+msgid "For instance, if it's unseasonably warm in late winter, you might leave your heavy coat at home, only to be corrected that evening by the wind off the Danube."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:164
+#, elixir-autogen
+msgid "This is a classic case of <strong>Fool's Spring</strong>."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:168
+#, elixir-autogen
+msgid "This page <strong>dynamically updates</strong> based on the <strong>day of the year</strong>, the <strong>time of day</strong>, and the <strong>current feels-like temperature</strong> in Budapest."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:175
+#, elixir-autogen
+msgid "It uses live weather data and over 50 years of historical data from the %{link} Archive API."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:185
+#, elixir-autogen
+msgid "Methodology"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:189
+#, elixir-autogen
+msgid "The seasons are mapped to a two-dimensional grid using the astrological sub-season and the relative temperature for that time of year."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:195
+#, elixir-autogen
+msgid "This is more art than science."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:206
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:257
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:307
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:358
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:435
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:462
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:489
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:516
+#, elixir-autogen
+msgid "Early"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:209
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:260
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:310
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:361
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:442
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:469
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:496
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:523
+#, elixir-autogen
+msgid "Mid"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:212
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:263
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:313
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:364
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:449
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:476
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:503
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:530
+#, elixir-autogen
+msgid "Late"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:219
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:270
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:320
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:371
+#, elixir-autogen
+msgid "Cold"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:234
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:278
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:335
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:379
+#, elixir-autogen
+msgid "Normal"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:239
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:289
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:340
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:387
+#, elixir-autogen
+msgid "Hot"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:250
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:459
+#, elixir-autogen
+msgid "Spring"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:351
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:513
+#, elixir-autogen
+msgid "Fall"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:399
+#, elixir-autogen
+msgid "Sub-Seasons"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:403
+#, elixir-autogen
+msgid "Each traditional season is divided into three roughly equal segments (early, mid, late) using their astrological definitions."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:416
+#, elixir-autogen
+msgid "Period"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:419
+#, elixir-autogen
+msgid "Start"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:422
+#, elixir-autogen
+msgid "End"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:540
+#, elixir-autogen
+msgid "Ranges are inclusive start, exclusive end."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:545
+#, elixir-autogen
+msgid "Historical Temperature"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:549
+#, elixir-autogen
+msgid "A weather baseline was established by analyzing hourly apparent temperature data for Budapest from 1970 to the present, collected from the %{link} Archive API. For each day-hour combination (e.g. March 15 at 2 PM), the mean and standard deviation were calculated across all years in the range."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:558
+#, elixir-autogen
+msgid "A <strong>hot</strong> period is when the feels-like temperature exceeds the historical mean by more than 1.5 standard deviations. A <strong>cold</strong> period is when it falls more than 1.5 standard deviations below."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:566
+#, elixir-autogen
+msgid "The 4 Baselines"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:570
+#, elixir-autogen
+msgid "Unlike the original NYC page which uses a single historical baseline, this site compares the current temperature against 4 different baselines simultaneously. Each baseline uses a different date range to calculate what \"normal\" means."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:576
+#, elixir-autogen
+msgid "When the baselines disagree on the current season, it reveals how climate change has shifted what counts as normal weather in Budapest. A temperature that was \"hot\" by 1970s standards might be perfectly \"normal\" by the last 5 years."
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:583
+#, elixir-autogen
+msgid "Deciding the Season"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:587
+#, elixir-autogen
+msgid "Using the sub-season and the temperature classification, the current season is determined from the grid above. For instance, if it's late winter and the temperature is well above average, it's classified as \"Fool's Spring.\""
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:594
+#, elixir-autogen
+msgid "Credits"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:598
+#, elixir-autogen
+msgid "Original concept: %{meme_link}. NYC implementation by %{author_link} at %{site_link}. Weather data: %{weather_link}."
+msgstr ""
+
+#: lib/real_seasons_web/components/core_components.ex:368
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr ""
+
+#: lib/real_seasons_web/components/layouts.ex:104
+#: lib/real_seasons_web/components/layouts.ex:116
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:613
+#, elixir-autogen, elixir-format
+msgid "Most of the content on this page is adapted from the original %{site_link} site."
+msgstr ""
+
+#: lib/real_seasons_web/components/layouts.ex:111
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr ""
+
+#: lib/real_seasons_web/components/layouts.ex:99
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr ""
+
+#: lib/real_seasons_web/components/core_components.ex:74
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:30
+#, elixir-autogen, elixir-format, fuzzy
+msgid "%{value} standard deviations colder than %{comparison}"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:25
+#, elixir-autogen, elixir-format, fuzzy
+msgid "%{value} standard deviations warmer than %{comparison}"
+msgstr ""
+
+#: lib/real_seasons_web/controllers/page_html/home.html.heex:21
+#, elixir-autogen, elixir-format
+msgid "almost exactly %{comparison}"
 msgstr ""

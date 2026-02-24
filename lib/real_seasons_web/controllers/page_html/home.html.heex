@@ -131,11 +131,12 @@
       </summary>
 
       <div class="mt-6 space-y-4 leading-relaxed">
+        <% meme_text = gettext("a popular meme about NYC's 12 seasons") %>
         <p>
           {gettext(
             "This page is inspired by %{meme_link} and its implementation at %{site_link}.",
             meme_link:
-              ~s(<a href="https://i.imgur.com/qT4WqjG.jpg" class="underline hover:text-base-content" target="_blank" rel="noopener">a popular meme about NYC's 12 seasons</a>),
+              ~s(<a href="https://i.imgur.com/qT4WqjG.jpg" class="underline hover:text-base-content" target="_blank" rel="noopener">#{meme_text}</a>),
             site_link:
               ~s(<a href="https://12seasons.nyc" class="underline hover:text-base-content" target="_blank" rel="noopener">12seasons.nyc</a>)
           )

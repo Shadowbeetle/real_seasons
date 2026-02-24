@@ -39,11 +39,11 @@ COPY lib lib
 
 COPY assets assets
 
-# compile assets
-RUN mix assets.deploy
-
-# Compile the release
+# Compile the project first (generates colocated JS hooks)
 RUN mix compile
+
+# Then compile assets (esbuild needs the colocated hooks from _build)
+RUN mix assets.deploy
 
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/

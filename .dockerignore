@@ -1,0 +1,35 @@
+# This file tells Docker which files to ignore when building the image.
+# It should be adapted to your application.
+
+# Ignore build artifacts
+/_build/
+/deps/
+
+# Ignore assets that are built
+/priv/static/assets/
+
+# Ignore development/test config
+/config/*.secret.exs
+.env
+
+# Ignore Docker and CI files
+/.github/
+/Dockerfile*
+/.dockerignore
+
+# Ignore Git
+/.git/
+/.gitignore
+
+# Ignore IDE/editor files
+/.vscode/
+/.idea/
+*.swp
+*.swo
+*~
+
+# Ignore Elixir Language Server
+/.elixir_ls/
+
+# Ignore node_modules if present
+/assets/node_modules/

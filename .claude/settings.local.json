@@ -26,7 +26,8 @@
       "Bash(mix gettext.extract:*)",
       "Bash(mix gettext.merge:*)",
       "Bash(mix compile:*)",
-      "Bash(mix phx.gen.secret:*)"
+      "Bash(mix phx.gen.secret:*)",
+      "Bash(mix phx.gen.release:*)"
     ]
   }
 }

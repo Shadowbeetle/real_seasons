@@ -1,9 +1,19 @@
 <Layouts.app flash={@flash} locale={@locale}>
   <div class="max-w-2xl mx-auto px-4 py-8">
     <%!-- Title --%>
-    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-2">
+    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-6">
       {gettext("Budapest actually has 12 seasons")}
     </h1>
+
+    <%!-- Baseline legend --%>
+    <div class="flex flex-wrap justify-center gap-4 mb-6 text-sm text-base-content/70">
+      <%= for baseline <- @baselines do %>
+        <div class="flex items-center gap-1.5">
+          <span class={["inline-block w-2.5 h-2.5 rounded-full", @baseline_colors[baseline]]} />
+          {@baseline_labels[baseline]}
+        </div>
+      <% end %>
+    </div>
 
     <%!-- Explainer --%>
     <%= if @weather && @primary do %>
@@ -11,11 +21,15 @@
         <%= for baseline <- @baselines do %>
           <% classification = @classifications[baseline] %>
           <% abs_dev = abs(classification.deviations) %>
-          <% dev_value = if @locale == "hu",
-            do: hungarian_multiplier(abs_dev),
-            else: :erlang.float_to_binary(abs_dev, decimals: 2) %>
+          <% dev_value =
+            if @locale == "hu",
+              do: hungarian_multiplier(abs_dev),
+              else: :erlang.float_to_binary(abs_dev, decimals: 2) %>
           <p class="flex items-center gap-1.5">
-            <span class={["inline-block w-2 h-2 rounded-full shrink-0", @baseline_colors[baseline]]} />
+            <span class={[
+              "inline-block w-2 h-2 rounded-full shrink-0",
+              @baseline_colors[baseline]
+            ]} />
             <%= cond do %>
               <% abs_dev < 0.05 -> %>
                 {gettext("almost exactly %{comparison}",
@@ -54,16 +68,6 @@
         </p>
       <% end %>
     <% end %>
-
-    <%!-- Baseline legend --%>
-    <div class="flex flex-wrap justify-center gap-4 mb-8 text-sm text-base-content/70">
-      <%= for baseline <- @baselines do %>
-        <div class="flex items-center gap-1.5">
-          <span class={["inline-block w-2.5 h-2.5 rounded-full", @baseline_colors[baseline]]} />
-          {@baseline_labels[baseline]}
-        </div>
-      <% end %>
-    </div>
 
     <%!-- Season list --%>
     <ul class="space-y-1" id="season-list">

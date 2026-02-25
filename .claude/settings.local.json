@@ -27,7 +27,10 @@
       "Bash(mix gettext.merge:*)",
       "Bash(mix compile:*)",
       "Bash(mix phx.gen.secret:*)",
-      "Bash(mix phx.gen.release:*)"
+      "Bash(mix phx.gen.release:*)",
+      "Bash(fly apps list)",
+      "Bash(fly logs -a real-seasons)",
+      "Bash(fly logs -a real-seasons --no-tail)"
     ]
   }
 }
